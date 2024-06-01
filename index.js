@@ -33,9 +33,16 @@ const run = async () => {
 
     // Collections from the database here
     const apartmentCollection = client.db("oneTower").collection("apartment");
+    const agreementCollection = client.db("oneTower").collection("agreements");
 
     app.get("/apartment", async (req, res) => {
       const result = await apartmentCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/agreements", async (req, res) => {
+      const agreement = req.body;
+      const result = await agreementCollection.insertOne(agreement);
       res.send(result);
     });
 
