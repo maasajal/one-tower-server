@@ -38,6 +38,7 @@ const run = async () => {
     const announcementCollection = client
       .db("oneTower")
       .collection("announcements");
+    const paymentCollection = client.db("oneTower").collection("payments");
 
     //  Apartment data API
     app.get("/apartment", async (req, res) => {
@@ -71,6 +72,11 @@ const run = async () => {
       res.send({
         clientSecret: paymentIntent.client_secret,
       });
+    });
+    app.post("/payments", async (req, res) => {
+      const payment = req.body;
+      const result = await paymentCollection.insertOne(payment);
+      res.send(result);
     });
 
     // Announcements by the owner API
