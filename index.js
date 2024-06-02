@@ -34,15 +34,32 @@ const run = async () => {
     // Collections from the database here
     const apartmentCollection = client.db("oneTower").collection("apartment");
     const agreementCollection = client.db("oneTower").collection("agreements");
+    const announcementCollection = client
+      .db("oneTower")
+      .collection("announcements");
 
+    //  Apartment data API
     app.get("/apartment", async (req, res) => {
       const result = await apartmentCollection.find().toArray();
       res.send(result);
     });
 
+    // Agreement data API
+    app.get("/agreements/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { user_email: email };
+      const result = await agreementCollection.findOne(query);
+      res.send(result);
+    });
     app.post("/agreements", async (req, res) => {
       const agreement = req.body;
       const result = await agreementCollection.insertOne(agreement);
+      res.send(result);
+    });
+
+    // Announcements by the owner API
+    app.get("/announcements", async (req, res) => {
+      const result = await announcementCollection.find().toArray();
       res.send(result);
     });
 
