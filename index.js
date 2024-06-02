@@ -16,6 +16,7 @@ app.get("/", (req, res) => {
 });
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jd9hrzt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const stripe = require("stripe")(process.env.PAYMENT_SK);
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -55,6 +56,21 @@ const run = async () => {
       const agreement = req.body;
       const result = await agreementCollection.insertOne(agreement);
       res.send(result);
+    });
+
+    // Payment intend
+    app.post("/create-payment-intent", async (req, res) => {
+      const { rent } = req.body;
+      const amount = parseInt(rent * 100);
+      // Create a PaymentIntent with the order amount and currency
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+        payment_method_types: ["card"],
+      });
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+      });
     });
 
     // Announcements by the owner API
