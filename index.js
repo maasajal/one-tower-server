@@ -34,6 +34,7 @@ const run = async () => {
 
     // Collections from the database here
     const apartmentCollection = client.db("oneTower").collection("apartment");
+    const userCollection = client.db("oneTower").collection("users");
     const agreementCollection = client.db("oneTower").collection("agreements");
     const announcementCollection = client
       .db("oneTower")
@@ -43,6 +44,33 @@ const run = async () => {
     //  Apartment data API
     app.get("/apartment", async (req, res) => {
       const result = await apartmentCollection.find().toArray();
+      res.send(result);
+    });
+
+    // User related API
+    app.get("/users", async (req, res) => {
+      const result = await userCollection.find().toArray();
+      res.send(result);
+    });
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const existingUser = await userCollection.findOne(query);
+      if (existingUser) {
+        return res.send({ message: "User already exists", insertedId: null });
+      }
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
+    app.patch("/users/member/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          role: "user",
+        },
+      };
+      const result = await userCollection.updateOne(filter, updatedDoc);
       res.send(result);
     });
 
@@ -76,6 +104,12 @@ const run = async () => {
     app.post("/payments", async (req, res) => {
       const payment = req.body;
       const result = await paymentCollection.insertOne(payment);
+      res.send(result);
+    });
+    app.get("/payment-histories/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await paymentCollection.find(query).toArray();
       res.send(result);
     });
 
