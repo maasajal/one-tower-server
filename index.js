@@ -39,6 +39,7 @@ const run = async () => {
     const announcementCollection = client
       .db("oneTower")
       .collection("announcements");
+    const couponCollection = client.db("oneTower").collection("coupons");
     const paymentCollection = client.db("oneTower").collection("payments");
 
     //  Apartment data API
@@ -119,6 +120,14 @@ const run = async () => {
         },
       };
       const result = await agreementCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    });
+
+    // Coupons API
+    app.post("/coupons", async (req, res) => {
+      const coupon = req.body;
+      console.log("Coupon added",coupon);
+      const result = await couponCollection.insertOne(coupon);
       res.send(result);
     });
 
