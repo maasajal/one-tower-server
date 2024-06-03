@@ -73,8 +73,30 @@ const run = async () => {
       const result = await userCollection.updateOne(filter, updatedDoc);
       res.send(result);
     });
+    app.patch("/users/role/:email", async (req, res) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const updatedDoc = {
+        $set: {
+          role: "member",
+        },
+      };
+      const result = await userCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    });
 
-    // Agreement data API
+    // Agreement related API
+    // app.get("/agreements", async (req, res) => {
+    //   const agreements = req.body;
+    //   const result = await agreementCollection.find(agreements).toArray();
+    //   res.send(result);
+    // });
+    app.get("/agreements", async (req, res) => {
+      const { status } = req.query;
+      const filter = { status: status };
+      const result = await agreementCollection.find(filter).toArray();
+      res.send(result);
+    });
     app.get("/agreements/:email", async (req, res) => {
       const email = req.params.email;
       const query = { user_email: email };
@@ -84,6 +106,19 @@ const run = async () => {
     app.post("/agreements", async (req, res) => {
       const agreement = req.body;
       const result = await agreementCollection.insertOne(agreement);
+      res.send(result);
+    });
+    app.patch("/agreements/:id", async (req, res) => {
+      const id = req.params.id;
+      const { accepted_date } = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          status: "checked",
+          accepted_date,
+        },
+      };
+      const result = await agreementCollection.updateOne(filter, updatedDoc);
       res.send(result);
     });
 
