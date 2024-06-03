@@ -118,6 +118,11 @@ const run = async () => {
       const result = await announcementCollection.find().toArray();
       res.send(result);
     });
+    app.post("/announcements", async (req, res) => {
+      const announcements = req.body;
+      const result = await announcementCollection.insertOne(announcements);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
