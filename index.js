@@ -126,8 +126,11 @@ const run = async () => {
     // Coupons API
     app.post("/coupons", async (req, res) => {
       const coupon = req.body;
-      console.log("Coupon added",coupon);
       const result = await couponCollection.insertOne(coupon);
+      res.send(result);
+    });
+    app.get("/coupons", async (req, res) => {
+      const result = await couponCollection.find().toArray();
       res.send(result);
     });
 
