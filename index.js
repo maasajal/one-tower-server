@@ -136,6 +136,12 @@ const run = async () => {
       const result = await agreementCollection.insertOne(agreement);
       res.send(result);
     });
+    app.delete("/agreements/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await agreementCollection.deleteOne(filter);
+      res.send(result);
+    });
     app.patch("/agreements/:id", async (req, res) => {
       const id = req.params.id;
       const { accepted_date } = req.body;
