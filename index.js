@@ -7,9 +7,16 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 7000;
 
+const corsOptions = {
+  origin: [
+    "http://localhost:5173",
+    "https://one1-tower.web.app",
+    "https://one1-tower.firebaseapp.com",
+  ],
+};
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.send("Welcome to One Tower!");
@@ -143,6 +150,12 @@ const run = async () => {
       const result = await couponCollection.find().toArray();
       res.send(result);
     });
+    app.delete("/coupons/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await couponCollection.deleteOne(filter);
+      res.send(result);
+    });
 
     // Payment intend
     app.post("/create-payment-intent", async (req, res) => {
@@ -182,7 +195,7 @@ const run = async () => {
     });
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
