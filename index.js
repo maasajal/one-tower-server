@@ -67,7 +67,7 @@ const run = async () => {
 
     // Middleware
     const verifyToken = async (req, res, next) => {
-      console.log("inside verify token", req.headers.authorization);
+      // console.log("inside verify token", req.headers.authorization);
       if (!req.headers.authorization) {
         return res.status(401).send({ message: "unauthorized access" });
       }
@@ -141,11 +141,11 @@ const run = async () => {
     });
 
     // Agreement related API
-    // app.get("/agreements", async (req, res) => {
-    //   const agreements = req.body;
-    //   const result = await agreementCollection.find(agreements).toArray();
-    //   res.send(result);
-    // });
+    app.get("/unavailable", async (req, res) => {
+      const agreements = req.body;
+      const result = await agreementCollection.find(agreements).toArray();
+      res.send(result);
+    });
     app.get("/agreements", async (req, res) => {
       const { status } = req.query;
       const filter = { status: status };
