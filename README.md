@@ -26,7 +26,7 @@ This server-side implementation ensures the One Tower project operates efficient
 
 ### Run the project on your Local machine
 
-- Clone: `git clone https://github.com/maasajal/one-tower-server.git.git`
+- Clone: `git clone https://github.com/maasajal/one-tower-server.git`
 - Change Directory: `cd one-tower-server`
 - Install packages: `npm i` or `npm install`
 - Run: `nodemon index.js` if you don't have nodemon run `node index.js`
